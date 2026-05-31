@@ -1,10 +1,9 @@
 from dotenv import load_dotenv
-import os
+from auth import get_client
 
 load_dotenv()
 
-client_id = os.getenv("STRAVA_CLIENT_ID")
-client_secret = os.getenv("STRAVA_CLIENT_SECRET")
+client = get_client()
+athlete = client.get_athlete()
 
-print(f"Client ID: {client_id}")
-print(f"Client secret loaded: {client_secret is not None}")
+print(f"Authenticated as: {athlete.firstname} {athlete.lastname}")
