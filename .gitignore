@@ -2,3 +2,4 @@
 __pycache__/
 *.pyc
 .venv/
+.strava_token.json
