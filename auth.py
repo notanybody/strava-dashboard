@@ -12,7 +12,7 @@ def get_client():
             token_data = json.load(f)
         client.access_token = token_data["access_token"]
         client.refresh_token = token_data["refresh_token"]
-        client.token_expires_at = token_data["expires_at"]
+        client.token_expires = token_data["expires_at"]
         return client
 
     client_id = os.getenv("STRAVA_CLIENT_ID")
