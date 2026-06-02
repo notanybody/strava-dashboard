@@ -23,3 +23,15 @@ def get_average_pace(runs):
     mins = int(avg)
     secs = int((avg - mins) * 60)
     return f"{mins}:{secs:02d} /mi"
+
+def get_weekly_mileage(runs):
+    weeks = {}
+    for run in runs:
+        week = run.start_date.isocalendar()[1]
+        year = run.start_date.year
+        key = f"{year}-W{week:02d}"
+        miles = float(run.distance) / 1609
+        weeks[key] = weeks.get(key, 0) + miles
+    
+    sorted_weeks = sorted(weeks.items())[-12:]
+    return [(week, round(miles, 1)) for week, miles in sorted_weeks]
