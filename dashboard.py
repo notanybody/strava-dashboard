@@ -11,6 +11,26 @@ class StatPanel(Static):
     def render(self) -> str:
         return f"{self.label}\n\n{self.value}"
 
+class WeeklyChart(Static):
+    def __init__(self, weekly_data: list):
+        super().__init__()
+        self.weekly_data = weekly_data
+
+    def render(self) -> str:
+        if not self.weekly_data:
+            return "No Data"
+
+        max_miles = max(miles for _, miles in self.weekly_data)
+        bar_max = 20
+
+        lines = []
+        for week, miles in self.weekly_data:
+            bar_length = int((miles / max_miles) * bar_max)
+            bar = "█" * bar_length
+            lines.append(f"{week} {bar:<20} {miles:.1f} mi")
+
+        return "\n".join(lines)
+
 class StravaApp(App):
     CSS = """
     Screen {
@@ -30,9 +50,10 @@ class StravaApp(App):
     }
     """
     
-    def __init__(self, stats: dict):
+    def __init__(self, stats: dict, weekly_data: list):
         super().__init__()
         self.stats = stats
+        self.weekly_data = weekly_data
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -40,6 +61,7 @@ class StravaApp(App):
             yield StatPanel("Yearly Mileage", self.stats.get("yearly_mileage", "-"))
             yield StatPanel("Longest Run", self.stats.get("longest_run", "-"))
             yield StatPanel("Average Pace", self.stats.get("avg_pace", "-"))
+        yield WeeklyChart(self.weekly_data)
         yield Footer()
 
 if __name__ == "__main__":
@@ -47,5 +69,5 @@ if __name__ == "__main__":
         "yearly_mileage": "257 mi",
         "longest_run": "13.4 mi",
         "avg_pace": "11:49 /mi"
-    })
+    }, weekly_data=[])
     app.run()
